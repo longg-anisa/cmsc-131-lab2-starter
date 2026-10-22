@@ -95,12 +95,12 @@ and its cause. One improvement and its estimated effect.
 One line per week. Name the subsystem each week finishes and the member
 who owns it.
 
-| Week | Goal | Owner |
-|---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | Defense | |
+| Week | Goal                                                                                      | Owner              |
+| ---- | ----------------------------------------------------------------------------------------- | ------------------ |
+| 1    | Document problem analysis and solution architecture; build a working prototype.           | Cambel, Carreon    |
+| 2    | Implement `qsort_asm`, `bsearch_asm`, and `gcd_asm`.                                      | De Guzman, Kaindoy |
+| 3    | Implement `sum_range_asm`. Set up tests, documents issues and quirks, debugging (if any). | Cambel, Carreon    |
+| 4    | Defense                                                                                   | All                |
 
 ## Subsystem Ownership
 
