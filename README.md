@@ -67,8 +67,14 @@ this activity adds. Keep each part short. Update it when the plan changes.
 
 ### Problem analysis
 
-The four routines `bench.c` expects and what each one returns. Which
-registers you preserve and why.
+| Routines    | Purpose                                                                                                                                    |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `qsort_asm` | Expects a pointer to an array of 32-bit signed integers (`*arr`) and the array length (`n`); sorts array in place, so nothing is returned. |
+| `bsearch_asm` | Expects a pointer to an array of 32-bit signed integers (`*arr`), the array length (`n`), and the value to find (`key`); returns index of `key` for a sorter array, and -1 otherwise. |
+| `gcd_asm` | Expects two non-negative integers (`a` and `b`); returns greatest common divisor of `a` and `b`. | 
+| `sum_range_asm` | Expects two integers that define the starting (`lo`) and ending (`hi`) points of an inclusive range; returns the sum of the range, assuming no overflow. |
+
+Callee-saved registers will be preserved (`ebx`, `esi`, `edi`, `ebp`, `esp`). `ebp` is the stack frame anchor. 
 
 ### Solution architecture
 
