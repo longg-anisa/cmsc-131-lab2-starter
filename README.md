@@ -69,17 +69,19 @@ needs. Leave the rest of this file as it is.
 | `gcd_asm` | Expects two non-negative integers (`a` and `b`); returns greatest common divisor of `a` and `b`. | 
 | `sum_range_asm` | Expects two integers that define the starting (`lo`) and ending (`hi`) points of an inclusive range; returns the sum of the range, assuming no overflow. |
 
-Callee-saved registers will be preserved (`ebx`, `esi`, `edi`, `ebp`, `esp`). `ebp` is the stack frame anchor. 
+Callee-saved registers will be preserved (`ebx`, `esi`, `edi`, `ebp`, `esp`). `ebp` is the stack frame anchor. Using them means restoring them before returning in the reverse order in which they were saved. Then return values go in `eax`. 
 
 ### Solution architecture
-__The routine implementation of `qsort_asm` in `bench.c`:__
+__The routine implementation of `qsort_asm` in `bench.c`:__ <br>
 `void PRE_CDECL qsort_asm(int *arr, int n) POST_CDECL`
+<br> <br>
 
 __Contract in `bench.c` when fetching the arguments:__
 | Argument | Address |
 |---|---|
 | int `n` | `[ebp+12]` |
 | int `*arr` | `[ebp+8]` |
+<br>
 
 __Stack frame diagram of one recursive call of `qsort_asm`:__
 | Address | Stack |
@@ -93,7 +95,9 @@ __Stack frame diagram of one recursive call of `qsort_asm`:__
 | `[ebp - 12]` | `ebx` (first pushed/saved register, last to pop/restore) |
 
 All saved local registers sit at negative offsets, below the `ebp`. Arguments start at `[ebp + 8]` to the increasing positive offsets of `ebp`.
+<br>
 
+__Why `sum_range_asm` is reentrant?__ <br>
 `sum_range_asm` is reentrant because it calls `bench_callback` once per call and `bench.c` triggers another call of `sum_range_asm`, so the second call happens inside the first one before it even finishes, and reentrancy should allow it without corrupting the data of the first call due to overlapping calls that might break the execution. This is done by excluding the call of `bench_callback` from the recursive execution of `sum_range_asm`. The function must not contain static or global variables, `.data` or `.bss`, to avoid breaking reentrancy. It only uses `ebp` and `esp`, which live in the stack memory, and the local saved registers to avoid the overlapping calls write on the same variable.
 
 
