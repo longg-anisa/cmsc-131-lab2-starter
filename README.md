@@ -108,11 +108,11 @@ Complete this section before the Week 1 progress report. The manual lists
 the three subsystems. Each member owns one. In a group of four, two members
 share one. The commit history must agree with this table.
 
-| Subsystem | Owner |
-|---|---|
-| Sorting (`qsort_asm` and its partition) | |
-| Searching (`bsearch_asm`, `gcd_asm`) | |
-| Convention and measurement (`sum_range_asm`, the benchmarks) | |
+| Subsystem                                                    | Owner  |
+| ------------------------------------------------------------ | ------ |
+| Sorting (`qsort_asm` and its partition)                      |        |
+| Searching (`bsearch_asm`, `gcd_asm`)                         |        |
+| Convention and measurement (`sum_range_asm`, the benchmarks) | Cambel |
 
 ## Quirks and Issues
 
