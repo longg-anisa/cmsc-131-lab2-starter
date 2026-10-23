@@ -129,7 +129,7 @@ and its cause. One improvement and its estimated effect.
 
 | Subsystem                                                    | Owner  |
 | ------------------------------------------------------------ | ------ |
-| Sorting (`qsort_asm` and its partition)                      |        |
+| Sorting (`qsort_asm` and its partition)                      | De Guzman       |
 | Searching (`bsearch_asm`, `gcd_asm`)                         | Kaindoy |
 | Convention and measurement (`sum_range_asm`, the benchmarks) | Cambel, Carreon |
 
