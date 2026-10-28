@@ -86,14 +86,52 @@ _gcd_asm:
         ; returns, so a counter that returns to zero on exit prints 0.
         ;
 
-        push    dword 1         ; depth of the first call
-        push    dword [ebp+12]  ; b
-        push    dword [ebp+8]   ; a
+        push    dword 1                 ; depth of the first call
+        push    dword [ebp+12]          ; b
+        push    dword [ebp+8]           ; a
         call    gcd_rec
         add     esp, 12
 
-        mov     [esp+28], eax   ; overwrite saved eax slot on the pusha
-        popa
+        mov     [esp+28], eax           ; put result in the saved-eax slot
+        popa                            ; restores all regs, eax = result
+        leave
+        ret
+
+; gcd_rec(a, b, depth)
+; where a in [ebp+8], b in [ebp+12], depth in [ebp+16]
+
+gcd_rec:
+        enter   0,0
+        pusha
+
+        mov     ecx, [ebp+12]           ; get b
+        cmp     ecx, 0                  ; if b = 0, sets ZF = 1
+        jnz     recurse         
+
+        ; base case reached (return a if b = 0)
+        mov     eax, [ebp+16]           ; get current depth
+        mov     [_gcd_depth], eax       ; store peak depth in global
+        mov     eax, [ebp+8]            ; return a
+        jmp     done
+
+recurse:
+        mov     eax, [ebp+8]            ; get a
+
+        xor     edx, edx                ; clear edx
+        div     ecx                     ; (edx:eax) / ecx, only remainder (edx = a % b) is needed
+
+        mov     eax, [ebp+16]             
+        inc     eax                     ; depth + 1
+
+        push    eax                     ; depth
+        push    edx                     ; new b = a % b
+        push    ecx                     ; new a = b
+        call    gcd_rec
+        add     esp, 12
+
+done:
+        mov     [esp+28], eax           ; result into saved-eax slot
+        popa                    
         leave
         ret
 
