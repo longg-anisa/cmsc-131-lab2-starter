@@ -86,8 +86,14 @@ _gcd_asm:
         ; returns, so a counter that returns to zero on exit prints 0.
         ;
 
+        push    dword 1         ; depth of the first call
+        push    dword [ebp+12]  ; b
+        push    dword [ebp+8]   ; a
+        call    gcd_rec
+        add     esp, 12
+
+        mov     [esp+28], eax   ; overwrite saved eax slot on the pusha
         popa
-        mov     eax, 0
         leave
         ret
 
