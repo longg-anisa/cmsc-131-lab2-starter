@@ -106,15 +106,15 @@ gcd_rec:
 
         mov     ecx, [ebp+12]           ; get b
         cmp     ecx, 0                  ; if b = 0, sets ZF = 1
-        jnz     recurse         
+        jnz     .recurse         
 
         ; base case reached (return a if b = 0)
         mov     eax, [ebp+16]           ; get current depth
         mov     [_gcd_depth], eax       ; store peak depth in global
         mov     eax, [ebp+8]            ; return a
-        jmp     done
+        jmp     .done
 
-recurse:
+.recurse:
         mov     eax, [ebp+8]            ; get a
 
         xor     edx, edx                ; clear edx
@@ -129,7 +129,7 @@ recurse:
         call    gcd_rec
         add     esp, 12
 
-done:
+.done:
         mov     [esp+28], eax           ; result into saved-eax slot
         popa                    
         leave
