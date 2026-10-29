@@ -127,4 +127,5 @@ did about it.
 
 ### Quirks
 
-- 
+- Quick Sort with the last element as the pivot (Lomuto partitioning) can cause a heavy **O(n^2)** efficiency when sorting an **already-sorted array**, which is especially noticeable 
+in arrays with llarge amounts of elements.
