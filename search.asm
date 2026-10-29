@@ -65,7 +65,77 @@ _bsearch_asm:
         ; dividend that cannot be negative.
         ;
 
+        push    dword [ebp+16]          ; key
+        mov     eax, [ebp+12]           ; n
+        dec     eax                     ; hi = n - 1 (n = 0 -> h = -1)
+        push    eax                     ; hi
+        push    dword 0                 ; lo = 0
+        push    dword [ebp+8]           ; arr
+        call    bsearch_rec
+        add     esp, 16
+ 
+        mov     [esp+28], eax           ; result into saved-eax slot
         popa
-        mov     eax, 0
+        leave
+        ret
+
+; bsearch_rec(arr, lo, hi, key)
+; where arr in [ebp+8], lo in [ebp+12], hi in [ebp+16], key in [ebp+20]
+
+bsearch_rec:
+        enter 0,0
+        pusha
+
+        mov     ecx, [ebp+12]           ; lo
+        mov     edx, [ebp+16]           ; hi
+
+        cmp     ecx, edx
+        jg      .absent                  ; signed: lo > hi -> range is empty, key is absent, so return -1
+
+        mov     eax, edx                ; copy hi to eax
+        sub     eax, ecx                ; hi - lo
+        shr     eax, 1                  ; divide by 2
+        add     eax, ecx                ; mid = (hi - lo)/2 + lo
+        mov     esi, eax                ; store mid in esi, survives recursive call since pusha/popa restores it
+
+        mov     ebx, [ebp+8]            ; arr
+        mov     edx, [ebx + esi*4]      ; arr[mid]
+        cmp     edx, [ebp+20]           ; compare arr[mid] with key
+        je      .found                  ; if equal, return mid
+        jl      .right                  ; if less than, key is in right half
+
+        ; otherwise, key is in left
+        lea     eax, [esi-1]            ; in left, hi = mid - 1
+
+        push    dword [ebp+20]          ; key
+        push    eax                     ; hi
+        push    dword [ebp+12]          ; lo (unchanged)
+        push    ebx                     ; arr
+        jmp     .recurse   
+
+.right:
+        lea     eax, [esi+1]            ; in right, lo = mid + 1
+
+        push    dword [ebp+20]          ; key
+        push    dword [ebp+16]          ; hi (unchanged) 
+        push    eax                     ; lo
+        push    ebx                     ; arr
+        ; then naturally falls to recurse
+
+.recurse:
+        call    bsearch_rec
+        add     esp, 16
+        jmp     .done
+
+.found:
+        mov     eax, esi
+        jmp     .done
+
+.absent:
+        mov     eax, -1
+
+.done:
+        mov     [esp+28], eax           ; result into saved-eax slot
+        popa
         leave
         ret
