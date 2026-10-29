@@ -109,11 +109,11 @@ and its cause. One improvement and its estimated effect.
 
 | File | Ratio |
 |---|---|
-| `random1000.txt` | |
-| `sorted1000.txt` | |
-| `reverse1000.txt` | |
-| `duplicates.txt` | |
-| `identical.txt` | |
+| `random1000.txt` | 0.83x|
+| `sorted1000.txt` |18.01x |
+| `reverse1000.txt` | 17.33x|
+| `duplicates.txt` |6.40x |
+| `identical.txt` |15.49x |
 
 
 ### Timeline
@@ -146,4 +146,5 @@ did about it.
 
 ### Quirks
 
-- 
+- Quick Sort with the last element as the pivot (Lomuto partitioning) can cause a heavy **O(n^2)** efficiency when sorting an **already-sorted array**, which is especially noticeable 
+in arrays with llarge amounts of elements.
