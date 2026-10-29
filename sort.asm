@@ -83,7 +83,7 @@ _qsort_asm:
 qsort_inner:
         push    ebp
         mov     ebp, esp
-        sub     esp,
+        sub     esp, 4
 
         ;base case
         mov     eax, [ebp+12]
