@@ -136,6 +136,7 @@ gcd_rec:
         ret
 
         global  _sum_range_asm
+
 _sum_range_asm:
         enter   0,0
         pusha
@@ -148,7 +149,52 @@ _sum_range_asm:
         ; accumulator here is what breaks reentrancy.
         ;
 
-        popa
+        call    _bench_callback         ; calls bench_callback once
+
+        ; sum_range(lo, hi)
+        push    dword [ebp+12]          ; hi
+        push    dword [ebp+8]           ; lo
+
+        call    sum_rec                 ; recursion starts and does not call bench_callback again
+        add     esp, 8                  ; clean args
+        jmp     end
+
+;
+;   sum_range(lo, hi):
+;       if lo > hi: return 0
+;       return lo + sum_range(lo + 1, hi)
+;
+
+sum_rec:
+        enter   0, 0
+        pusha
+
+        mov     eax, [ebp+8]            ; get lo to eax
+        mov     ecx, [ebp+12]           ; get hi to ecx
+        
+        ; if lo > hi: return 0
+        cmp     eax, ecx                ; eax-ecx
+        jg      .base                   ; (lo > hi) is the base case
+                                        ; jumps to .base if cmp is greater than 0
+                                        ; positive difference mean eax > ecx
+
+        ; return lo + sum_range(lo + 1, hi)
+        inc     eax                     ; lo + 1
+        push    ecx                     ; push hi
+        push    eax                     ; push lo
+        call    sum_rec                 ; call recursive part of sum_range
+        add     esp, 8                  ; clean args
+
+        add     eax, [ebp+8]            ; lo + sum_range(lo + 1, hi)
+        jmp     end
+
+.base:
+        xor     eax, eax                ; return 0 as the base case
+
+end:
+        mov     [esp+28], eax           ; result into saved-eax slot
+        
         mov     eax, 0
+        popa
         leave
         ret

@@ -100,6 +100,8 @@ All saved local registers sit at negative offsets, below the `ebp`. Arguments st
 __Why `sum_range_asm` is reentrant?__ <br>
 `sum_range_asm` is reentrant because it calls `bench_callback` once per call and `bench.c` triggers another call of `sum_range_asm`, so the second call happens inside the first one before it even finishes, and reentrancy should allow it without corrupting the data of the first call due to overlapping calls that might break the execution. This is done by excluding the call of `bench_callback` from the recursive execution of `sum_range_asm`. The function must not contain static or global variables, `.data` or `.bss`, to avoid breaking reentrancy. It only uses `ebp` and `esp`, which live in the stack memory, and the local saved registers to avoid the overlapping calls write on the same variable.
 
+__What a non-reentrant version would have looked like?__ <br>
+A non-reentrant version will include a global variable before the execution of the bench_callback. At that point the outer call is a live state and writes on the global variable, then calls the bench_callback that calls the nested sum_range_asm. The nested call runs and overwrites the same global variable. After it returns, the outer is still a live state in global, which the global variable is already overwritten by the nested call that makes the outer result corrupted.
 
 ### Measurements
 
@@ -142,9 +144,9 @@ did about it.
 
 ### Known issues
 
-- 
+- Reentrancy not entering the nested call, result stating `sum_range_asm` did not call `bench_callback` [ISSUE: calling convention did not include an underscore at first; RESOLVED: `_bench_callback` instead of `bench_callback`]
 
 ### Quirks
 - `shr eax, 1` replaces division by 2 in the midpoint in `bsearch_rec`. This is correct only because `hi-lo` is always nonnegative, since the `cmp` and `jg .absent` base-case check runs first. 
 - Quick Sort with the last element as the pivot (Lomuto partitioning) can cause a heavy **O(n^2)** efficiency when sorting an **already-sorted array**, which is especially noticeable 
-in arrays with llarge amounts of elements.
+in arrays with large amounts of elements.
