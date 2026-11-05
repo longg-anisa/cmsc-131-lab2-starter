@@ -147,6 +147,6 @@ did about it.
 - Reentrancy not entering the nested call, result stating `sum_range_asm` did not call `bench_callback` [ISSUE: calling convention did not include an underscore at first; RESOLVED: `_bench_callback` instead of `bench_callback`]
 
 ### Quirks
-
+- `shr eax, 1` replaces division by 2 in the midpoint in `bsearch_rec`. This is correct only because `hi-lo` is always nonnegative, since the `cmp` and `jg .absent` base-case check runs first. 
 - Quick Sort with the last element as the pivot (Lomuto partitioning) can cause a heavy **O(n^2)** efficiency when sorting an **already-sorted array**, which is especially noticeable 
 in arrays with large amounts of elements.
