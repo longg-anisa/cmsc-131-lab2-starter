@@ -144,9 +144,9 @@ did about it.
 
 ### Known issues
 
-- 
+- Reentrancy not entering the nested call, result stating `sum_range_asm` did not call `bench_callback` [ISSUE: calling convention did not include an underscore at first; RESOLVED: `_bench_callback` instead of `bench_callback`]
 
 ### Quirks
 
 - Quick Sort with the last element as the pivot (Lomuto partitioning) can cause a heavy **O(n^2)** efficiency when sorting an **already-sorted array**, which is especially noticeable 
-in arrays with llarge amounts of elements.
+in arrays with large amounts of elements.
