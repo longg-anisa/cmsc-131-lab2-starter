@@ -51,10 +51,6 @@ file appears as a diff in the open.
 
 ## Documentation
 
-The three sections at the end of this file are yours. Complete Design Notes
-and Subsystem Ownership before the Week 1 progress report. Complete Quirks
-and Issues before the Week 3 progress report. Each section says what it
-needs. Leave the rest of this file as it is.
 
 ---
 
@@ -136,11 +132,6 @@ and its cause. One improvement and its estimated effect.
 | Convention and measurement (`sum_range_asm`, the benchmarks) | Cambel, Carreon |
 
 ## Quirks and Issues
-
-Complete this section before the Week 3 progress report. The syllabus asks
-for documentation of quirks and issues with the complete implementation.
-One entry per item. State what happens, what causes it, and what the group
-did about it.
 
 ### Known issues
 
